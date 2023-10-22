@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<header th:insert="~{fragments::header}"></header>
+<body>
+<h3 th:text="|Witaj ${#authentication.getName()} miło cie widzieć z powrotem|" style="text-align: center">Strona
+    główna</h3>
+<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+    <a th:href="@{/user/edit}"
+       class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Edytuj</a>
+</div>
+</body>
+</html>
