@@ -1,4 +1,4 @@
-package com.temat29zad1.controller;
+package com.temat29zad1.controllers;
 
 import com.temat29zad1.roles.Role;
 import com.temat29zad1.service.UserService;

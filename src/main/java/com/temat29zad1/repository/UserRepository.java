@@ -16,13 +16,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByRoleEquals(Role role);
 
-    @Query("SELECT u FROM app_user u where u.role != :role")
-    List<User> findAllExceptRole(Role role);
-
     @Modifying
     @Transactional
     @Query("UPDATE app_user SET firstName = :firstName, lastName = :lastName, password = :password, role = :role WHERE id = :id")
     void updateUserById(@Param(value = "firstName") String firstName, @Param(value = "lastName") String lastName,
                         @Param(value = "password") String password,
                         @Param(value = "role") Role role, @Param(value = "id") Long id);
+
+
 }

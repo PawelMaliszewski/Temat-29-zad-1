@@ -1,7 +1,5 @@
 package com.temat29zad1.user;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 public class UserMapper {
 
     public static User convertToUser(UserDto userDto) {
@@ -9,7 +7,7 @@ public class UserMapper {
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
-        user.setPassword("TODO");
+        user.setPassword(userDto.getPassword());
         user.setRole(userDto.getRole());
         return user;
     }

@@ -7,18 +7,33 @@
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="../static/styles/styles.css" th:href="@{/styles/styles.css}">
 </head>
+<header th:insert="~{fragments::header(${user})}"></header>
 <body>
 <div class="container">
-  <h2 >Witaj !</h2>
-    <h2>Lista użytkowników</h2>
-    <ul>
-        <li th:each="email: ${userEmails}">
-            <span th:text="*{email}">Jan kowalski</span>
-            &nbsp;
-            <a href="#" th:href="@{/admin/delete-user(email=${email})}">Usuń</a>
-        </li>
-    </ul>
-
+    <table class="table table-bordered mt-2">
+        <thead class="">
+        <tr class="thead-light">
+            <th class="text-center align-middle">Id</th>
+            <th class="text-center align-middle">Imię</th>
+            <th class="text-center align-middle">Nazwisko</th>
+            <th class="text-center align-middle">Email</th>
+            <th class="text-center align-middle">Uprawnienia</th>
+            <th class="text-center align-middle">Akcja</th>
+        </tr>
+        </thead>
+        <tbody >
+        <tr th:each="user: ${dtoUserList}" th:object="${user}">
+            <td class="text-center align-middle" th:text="*{id}">a</td>
+            <td class="text-center align-middle" th:text="*{firstName}">a</td>
+            <td class="text-center align-middle" th:text="*{lastName}">a</td>
+            <td class="text-center align-middle" th:text="*{email}">a</td>
+            <td class="text-center align-middle" th:text="*{role.name()}">a</td>
+            <td class="hstack align-middle">
+                <a th:href="@{|/admin/edit?id=*{id}|}" class="btn btn-primary">Edytuj</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

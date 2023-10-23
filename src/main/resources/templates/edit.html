@@ -16,6 +16,7 @@
     <i class="fa-solid fa-pen-to-square fa-10x lock-icon"></i>
     <form th:action="@{/user/update}" th:object="${userDto}" method="post" class="login-form">
         <input th:field="*{id}" hidden>
+        <input th:field="*{email}" hidden>
         <label for="firstName" class="form-label">Edytuj imię</label>
         <input th:field="*{firstName}" th:type="text" class="form-control" id="firstName" placeholder="wpisz imię">
         <label for="lastName" class="form-label">Edytuj nazwisko</label>
@@ -23,6 +24,17 @@
         <label for="email" class="form-label">Wpisz hasło, tylko jeżeli chcesz je zmienić</label>
         <input th:field="*{password}" type="password" class="form-control" id="email" placeholder="wpisz hasło">
         <input th:field="*{role}" hidden>
+
+        <label for="role">Wybierz role użytkownika</label>
+        <select th:if="${admin}" th:field="*{role}" id="role" class="form-select mb-2 w-25"
+                aria-label="Small select example" required>
+            <option value="">Wybierz kategorie</option>
+            <option name="Rola użytkownika"
+                    th:each="role: ${T(com.temat29zad1.roles.Role).values()}"
+                    th:value="${role}"
+                    th:text="${role.name()}"></option>
+        </select>
+
         <button type="submit" class="btn btn-primary form-item">Zapisz</button>
     </form>
     <div class="d-grid gap-2 d-md-flex justify-content-md-center">

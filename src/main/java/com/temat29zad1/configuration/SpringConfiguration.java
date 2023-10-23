@@ -19,11 +19,13 @@ public class SpringConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
-                .requestMatchers("/", "/styles/**", "/register", "/forgot-password", "/confirm").permitAll()
-                .requestMatchers("/user/**").hasRole(Role.USER.name())
-                .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
+                .requestMatchers("/", "/styles/**", "/register", "/forgot-password", "/confirm"
+                        , "/register", "/registration-form", "forgot-password", "/token-expired",
+                        "/reset-password", "/set-new-password/**", "/new-password/**").permitAll()
+                .requestMatchers("/user/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
+                .requestMatchers("/admin/**").hasRole(String.valueOf(Role.ADMIN))
                 .anyRequest().authenticated());
-        http.formLogin(login -> login.loginPage("/login").permitAll());
+        http.formLogin(login -> login.loginPage("/login").defaultSuccessUrl("/").permitAll());
         http.logout(logout -> logout.logoutUrl("/logout"));
         return http.build();
     }

@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="pl" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+                xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title></title>
 </head>
-<div th:fragment="header">
+<div th:fragment="header(user)">
     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <p th:text="${user}"></p>
         <a  th:href="@{/}"
            class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Strona główna</a>
-        <a th:if="${#authentication.getName() == 'anonymousUser'}" th:href="@{/login}"
-           class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Zaloguj</a>
         <a th:if="${#authentication.getName() == 'anonymousUser'}" th:href="@{/register}"
            class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Zarejestruj się</a>
-        <a th:if="${#authentication.getName() != 'anonymousUser'}" th:href="@{/user}"
-           class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Konto</a>
+        <a th:if="${#authentication.getName() == 'anonymousUser'}" th:href="@{/login}"
+           class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Zaloguj się</a>
+        <a th:if="${user == 'user'}" th:href="@{/user}"
+           class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Użytkownik</a>
+        <a th:if="${user == 'admin'}" th:href="@{/admin}"
+           class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Admin</a>
         <a th:if="${#authentication.getName() != 'anonymousUser'}" th:method="post" th:href="@{/logout}"
            class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Wyloguj</a>
-
     </div>
 </div>
 </html>

@@ -1,6 +1,5 @@
-package com.temat29zad1.controller;
+package com.temat29zad1.controllers;
 
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +14,8 @@ public class LoginLogoutController {
         }
         return "login-form";
     }
+
+
 
     @GetMapping("/logout")
     public String logout() {
