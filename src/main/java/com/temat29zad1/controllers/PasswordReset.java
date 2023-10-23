@@ -18,12 +18,10 @@ import java.util.Optional;
 @Controller
 public class PasswordReset {
 
-
     private final UserService userService;
     private final EmailService emailService;
     private final PasswordResetService passwordResetService;
     private final PasswordEncoder passwordEncoder;
-
 
     public PasswordReset(UserService userService, EmailService emailService, PasswordResetService passwordResetService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
@@ -38,11 +36,16 @@ public class PasswordReset {
     }
 
     @PostMapping("/reset-password")
-    public String passwordResetRequest(String email) {
+    public String passwordResetRequest(String email, Model model) {
         Optional<User> userByEmail = userService.findUserByEmail(email);
         if (userByEmail.isPresent()) {
-            System.out.println();
-            emailService.sendEmail(userByEmail.get());
+            if (passwordResetService.checkForTokensByUserIdAndIfItsValid(userByEmail.get().getId())) {
+                model.addAttribute("tokenInfo", "Token został już wygenerowany");
+                return "token-info";
+            } else {
+                emailService.sendEmail(userByEmail.get());
+                return "redirect:/confirm";
+            }
         }
         return "index";
     }
@@ -51,6 +54,7 @@ public class PasswordReset {
     public String setNewPassword(Model model, @PathVariable String token) {
         Optional<PasswordResetToken> prt = passwordResetService.returnTokenIfValidated(token);
         if (prt.isPresent()) {
+
             model.addAttribute("userToken", prt.get().getToken());
             return "new-password";
         }
@@ -66,7 +70,7 @@ public class PasswordReset {
             if (password != null) {
                 user.setPassword(passwordEncoder.encode(password));
             }
-            Boolean saved = userService.updateUser(UserMapper.convertToUserDto(user));
+            Boolean saved = userService.updateUser(UserMapper.convertToUserDto(user), userToken);
             if (saved) {
                 return "redirect:/confirm";
             }

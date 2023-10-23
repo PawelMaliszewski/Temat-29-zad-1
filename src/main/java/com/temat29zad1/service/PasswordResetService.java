@@ -24,4 +24,16 @@ public class PasswordResetService {
         };
         return passToken;
     }
+
+    public Boolean checkForTokensByUserIdAndIfItsValid(Long id) {
+        Optional<PasswordResetToken> byUserId = passwordResetTokenRepository.findByUser_Id(id);
+        if (byUserId.isPresent()) {
+            if (returnTokenIfValidated(byUserId.get().getToken()).isPresent()) {
+                return true;
+            } else {
+                passwordResetTokenRepository.deleteTokenByToken(byUserId.get().getToken());
+            }
+        }
+        return false;
+    }
 }

@@ -2,11 +2,9 @@ package com.temat29zad1.service;
 
 import com.temat29zad1.repository.PasswordResetTokenRepository;
 import com.temat29zad1.repository.UserRepository;
-import com.temat29zad1.roles.Role;
 import com.temat29zad1.user.User;
 import com.temat29zad1.user.UserDto;
 import com.temat29zad1.user.UserMapper;
-import org.antlr.v4.runtime.Token;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -59,7 +57,7 @@ public class UserService {
             userRepository.updateUserById(user.getFirstName(), user.getLastName(),
                     user.getPassword(), user.getRole(), user.getId());
             if ((token != null)) {
-                passwordResetTokenRepository.deleteTokenByUserId(user.getId());
+                passwordResetTokenRepository.deleteTokenByToken(token);
             }
             return true;
         } catch (DataIntegrityViolationException e) {
