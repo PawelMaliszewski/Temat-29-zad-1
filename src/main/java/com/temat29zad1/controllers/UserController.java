@@ -22,11 +22,7 @@ public class UserController {
 
     @GetMapping
     public String user (@CurrentSecurityContext SecurityContext securityContext, Model model) {
-        if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_ADMIN]")) {
-            model.addAttribute("admin", "admin");
-        } else {
-            model.addAttribute("user", "user");
-        }
+        model.addAttribute("user", "admin");
         return "user";
     }
 
@@ -36,17 +32,24 @@ public class UserController {
         if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_ADMIN]")) {
             model.addAttribute("admin", true);
         } if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_USER]")) {
-            model.addAttribute("user", "user");
+            model.addAttribute("user", "userOnly");
         }
         model.addAttribute("userDto", userDto);
         return "edit";
     }
 
     @PostMapping("/update")
-    public String updateUser(UserDto userDto) {
-        Boolean b = userService.updateUser(userDto);
+    public String updateUser(@CurrentSecurityContext SecurityContext securityContext, UserDto userDto) {
+        if (!userDto.getPassword().isEmpty()) {
+            String password = userService.passwordEncode(userDto.getPassword());
+            userDto.setPassword(password);
+        }
+        Boolean b = userService.updateUser(userDto, null);
         if (b) {
-            return "user";
+            if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_ADMIN]")) {
+                return "redirect:/admin";
+            }
+            return "redirect:/confirm";
         }
         return "error";
     }

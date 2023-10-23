@@ -7,7 +7,6 @@
 </head>
 <div th:fragment="header(user)">
     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-        <p th:text="${user}"></p>
         <a  th:href="@{/}"
            class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Strona główna</a>
         <a th:if="${#authentication.getName() == 'anonymousUser'}" th:href="@{/register}"

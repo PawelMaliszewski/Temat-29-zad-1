@@ -25,7 +25,7 @@ public class SpringConfiguration {
                 .requestMatchers("/user/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
                 .requestMatchers("/admin/**").hasRole(String.valueOf(Role.ADMIN))
                 .anyRequest().authenticated());
-        http.formLogin(login -> login.loginPage("/login").defaultSuccessUrl("/").permitAll());
+        http.formLogin(login -> login.loginPage("/login").defaultSuccessUrl("/", true).permitAll());
         http.logout(logout -> logout.logoutUrl("/logout"));
         return http.build();
     }

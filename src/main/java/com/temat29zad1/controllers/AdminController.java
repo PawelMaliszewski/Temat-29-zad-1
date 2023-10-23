@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -24,12 +25,7 @@ public class AdminController {
     @GetMapping
     private String adminPanel(@CurrentSecurityContext SecurityContext securityContext, Model model) {
         List<UserDto> usersByRole = userService.findAllUsers();
-        if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_ADMIN]")) {
-            model.addAttribute("admin", "admin");
-        }
-        if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_USER]")) {
-            model.addAttribute("user", "user");
-        }
+        model.addAttribute("user", "admin");
         model.addAttribute("dtoUserList", usersByRole);
         return "admin";
     }
@@ -37,6 +33,7 @@ public class AdminController {
     @GetMapping("/{id}")
     public String editById(Long id, Model model) {
         model.addAttribute("userDto", userService.findUserDtoById(id));
+        model.addAttribute("admin", true);
         return "edit";
     }
 }

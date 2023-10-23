@@ -6,6 +6,7 @@ import com.temat29zad1.roles.Role;
 import com.temat29zad1.user.User;
 import com.temat29zad1.user.UserDto;
 import com.temat29zad1.user.UserMapper;
+import org.antlr.v4.runtime.Token;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class UserService {
         }
     }
 
-    public Boolean updateUser(UserDto userDto) {
+    public Boolean updateUser(UserDto userDto, String token) {
         if (userDto.getPassword().isEmpty()) {
             userDto.setPassword(userRepository.findById(userDto.getId()).get().getPassword());
         }
@@ -57,7 +58,9 @@ public class UserService {
         try {
             userRepository.updateUserById(user.getFirstName(), user.getLastName(),
                     user.getPassword(), user.getRole(), user.getId());
-            passwordResetTokenRepository.deleteTokenByUserId(user.getId());
+            if ((token != null)) {
+                passwordResetTokenRepository.deleteTokenByUserId(user.getId());
+            }
             return true;
         } catch (DataIntegrityViolationException e) {
             System.out.println(e.getMessage());
@@ -75,5 +78,9 @@ public class UserService {
 
     public void deleteTokenByToken(String token) {
         passwordResetTokenRepository.deleteTokenByToken(token);
+    }
+
+    public String passwordEncode(String password) {
+        return passwordEncoder.encode(password);
     }
 }

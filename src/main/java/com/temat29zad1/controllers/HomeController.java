@@ -16,7 +16,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(@CurrentSecurityContext SecurityContext securityContext, Model model) {
         if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_ADMIN]")) {
-            model.addAttribute("admin", "admin");
+            model.addAttribute("user", "admin");
         }
         if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_USER]")) {
             model.addAttribute("user", "user");
