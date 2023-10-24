@@ -1,6 +1,6 @@
 package com.temat29zad1.configuration;
 
-import com.temat29zad1.service.UserService;
+import com.temat29zad1.user.UserService;
 import com.temat29zad1.user.UserDto;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

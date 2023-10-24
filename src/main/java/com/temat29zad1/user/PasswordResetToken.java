@@ -1,7 +1,6 @@
-package com.temat29zad1.passwordResetservice;
+package com.temat29zad1.user;
 
-import com.temat29zad1.user.User;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

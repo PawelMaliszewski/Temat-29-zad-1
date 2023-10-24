@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title></title>
 </head>
-<div th:fragment="header(user)">
+<div th:fragment="header">
     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
         <a  th:href="@{/}"
            class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Strona główna</a>
@@ -13,9 +13,9 @@
            class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Zarejestruj się</a>
         <a th:if="${#authentication.getName() == 'anonymousUser'}" th:href="@{/login}"
            class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Zaloguj się</a>
-        <a th:if="${user == 'user'}" th:href="@{/user}"
+        <a sec:authorize="hasRole('USER')" th:href="@{/user}"
            class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Użytkownik</a>
-        <a th:if="${user == 'admin'}" th:href="@{/admin}"
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"
            class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Admin</a>
         <a th:if="${#authentication.getName() != 'anonymousUser'}" th:method="post" th:href="@{/logout}"
            class="link-offset-3 link-underline-opacity-35 link-underline-opacity-100-hover ">Wyloguj</a>

@@ -1,17 +1,16 @@
 package com.temat29zad1.user;
 
-import com.temat29zad1.passwordResetservice.PasswordResetToken;
-import com.temat29zad1.roles.Role;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity(name = "app_user")
-public class User {
+class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

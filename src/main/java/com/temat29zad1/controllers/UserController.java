@@ -1,6 +1,6 @@
 package com.temat29zad1.controllers;
 
-import com.temat29zad1.service.UserService;
+import com.temat29zad1.user.UserService;
 import com.temat29zad1.user.UserDto;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,36 +21,27 @@ public class UserController {
     }
 
     @GetMapping
-    public String user (@CurrentSecurityContext SecurityContext securityContext, Model model) {
-        model.addAttribute("user", "admin");
+    public String user (Model model) {
         return "user";
     }
 
     @GetMapping("edit")
     public String edit(@CurrentSecurityContext SecurityContext securityContext, Model model) {
         UserDto userDto = userService.findUserDtoByEmail(securityContext.getAuthentication().getName()).get();
-        if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_ADMIN]")) {
-            model.addAttribute("admin", true);
-        } if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_USER]")) {
-            model.addAttribute("user", "userOnly");
-        }
         model.addAttribute("userDto", userDto);
         return "edit";
     }
 
     @PostMapping("/update")
     public String updateUser(@CurrentSecurityContext SecurityContext securityContext, UserDto userDto) {
-        if (!userDto.getPassword().isEmpty()) {
-            String password = userService.passwordEncode(userDto.getPassword());
-            userDto.setPassword(password);
-        }
-        Boolean b = userService.updateUser(userDto, null);
-        if (b) {
+        Boolean saved = userService.updateUser(userDto, null, null);
+        if (saved) {
             if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_ADMIN]")) {
                 return "redirect:/admin";
             }
-            return "redirect:/confirm";
+            return "redirect:/user";
         }
         return "error";
     }
 }
+

@@ -2,6 +2,11 @@
     margin: 0 auto;
     max-width: 400px;
 }
+
+.confirm{
+    margin: 0 auto;
+    max-width: 800px;
+}
 .login-form{
     display: flex;
     flex-direction: column;

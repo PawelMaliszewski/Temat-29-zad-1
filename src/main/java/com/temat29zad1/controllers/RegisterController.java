@@ -1,7 +1,7 @@
 package com.temat29zad1.controllers;
 
-import com.temat29zad1.roles.Role;
-import com.temat29zad1.service.UserService;
+import com.temat29zad1.user.Role;
+import com.temat29zad1.user.UserService;
 import com.temat29zad1.user.UserDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,15 +28,10 @@ public class RegisterController {
         userDto.setRole(Role.USER);
         Boolean register = userService.register(userDto);
         if (register) {
-            return "redirect:/confirm";
+            return "redirect:/confirm?message=Konto utworzone.";
         }
         model.addAttribute("userDto", new UserDto());
         model.addAttribute("error", "Użytkownik: " + userDto.getEmail() + " jest zarejestrowany");
         return "register";
-    }
-
-    @GetMapping("/confirm")
-    public String conf() {
-        return "confirm";
     }
 }

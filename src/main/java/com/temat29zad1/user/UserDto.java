@@ -1,6 +1,5 @@
 package com.temat29zad1.user;
 
-import com.temat29zad1.roles.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

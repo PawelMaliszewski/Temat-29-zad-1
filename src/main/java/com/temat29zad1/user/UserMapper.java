@@ -1,9 +1,9 @@
 package com.temat29zad1.user;
-
-public class UserMapper {
+ class UserMapper {
 
     public static User convertToUser(UserDto userDto) {
         User user = new User();
+        user.setId(userDto.getId());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());

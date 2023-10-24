@@ -1,9 +1,7 @@
 package com.temat29zad1.controllers;
 
-import com.temat29zad1.service.UserService;
+import com.temat29zad1.user.UserService;
 import com.temat29zad1.user.UserDto;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +20,8 @@ public class AdminController {
     }
 
     @GetMapping
-    private String adminPanel(@CurrentSecurityContext SecurityContext securityContext, Model model) {
+    private String adminPanel(Model model) {
         List<UserDto> usersByRole = userService.findAllUsers();
-        model.addAttribute("user", "admin");
         model.addAttribute("dtoUserList", usersByRole);
         return "admin";
     }
@@ -32,7 +29,6 @@ public class AdminController {
     @GetMapping("/{id}")
     public String editById(Long id, Model model) {
         model.addAttribute("userDto", userService.findUserDtoById(id));
-        model.addAttribute("admin", true);
         return "edit";
     }
 }

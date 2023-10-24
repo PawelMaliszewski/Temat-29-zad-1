@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Potwierdzenie</title>
@@ -12,8 +12,8 @@
 
 </head>
 <body>
-<div class="container">
-    <h1 class="login-header">Operacja zakończona sukcesem</h1>
+<div class="container confirm">
+    <h1 th:text="${message}" class="login-header">Operacja zakończona sukcesem</h1>
     <i class="fa-solid fa-floppy-disk fa-10x lock-icon"></i>
     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
         <a th:href="@{/}">Strona główna</a>
