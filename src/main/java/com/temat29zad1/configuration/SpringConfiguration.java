@@ -28,7 +28,7 @@ public class SpringConfiguration {
                         "/reset-password", "/set-new-password/**", "/new-password/**").permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
                 .antMatchers("/user/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
-                .antMatchers("/admin/**").hasRole(String.valueOf(Role.ADMIN))
+                .antMatchers("/admin/**").hasRole(Role.ADMIN.name())
                 .anyRequest().authenticated());
 
         http.csrf(csrf -> csrf.ignoringRequestMatchers(h2ConsoleRequestMatcher));
