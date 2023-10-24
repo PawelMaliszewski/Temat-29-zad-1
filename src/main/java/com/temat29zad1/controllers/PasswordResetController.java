@@ -31,10 +31,8 @@ public class PasswordResetController {
 
     @PostMapping("/reset-password")
     public String passwordResetRequest(String email, RedirectAttributes ra) {
-        Optional<UserDto> userByEmail = userService.findUserDtoByEmail(email);
-        if (userByEmail.isPresent()) {
-            passwordResetService.deleteExpiredTokenIfExists(userByEmail.get().getId());
-            emailService.sendEmail(userByEmail.get());
+        if (userService.checkIfEmailExists(email)) {
+            emailService.sendEmail(email, passwordResetService.generatePasswordResetToken(email));
         }
         ra.addAttribute("message", "Jeżeli konto istnieje, na adres email został wysłany link.");
         return "redirect:/confirm";
@@ -42,8 +40,8 @@ public class PasswordResetController {
 
     @GetMapping("/set-new-password/{token}")
     public String setNewPassword(Model model, @PathVariable String token) {
-        Optional<PasswordResetToken> prt = passwordResetService.returnTokenIfValidated(token);
-        if (prt.isPresent()) {
+        String validatedToken = passwordResetService.returnTokenIfValidated(token);
+        if (!validatedToken.isEmpty()) {
             model.addAttribute("userToken", token);
             return "new-password";
         }

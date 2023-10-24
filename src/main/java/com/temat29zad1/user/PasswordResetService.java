@@ -10,18 +10,19 @@ import java.util.UUID;
 public class PasswordResetService {
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final UserRepository userRepository;
 
-    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository) {
+    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository, UserRepository userRepository) {
         this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.userRepository = userRepository;
     }
 
-
-    public Optional<PasswordResetToken> returnTokenIfValidated(String token) {
+    public String returnTokenIfValidated(String token) {
         Optional<PasswordResetToken> passToken = passwordResetTokenRepository.findPasswordResetTokenByToken(token);
         if (passToken.isEmpty() || passToken.get().getExpiryDateTime().isBefore(LocalDateTime.now())) {
-            return Optional.empty();
+            return "";
         }
-        return passToken;
+        return passToken.get().getToken();
     }
 
     public void deleteExpiredTokenIfExists(Long id) {
@@ -33,8 +34,8 @@ public class PasswordResetService {
         }
     }
 
-    public String generatePasswordResetToken(UserDto userDto) {
-        User user = UserMapper.convertToUser(userDto);
+    public String generatePasswordResetToken(String email) {
+        User user = userRepository.findUserByEmail(email).get();
         UUID uuid = UUID.randomUUID();
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDateTime expiryDateTime = currentDateTime.plusMinutes(30L);

@@ -73,10 +73,15 @@ public class UserService {
         }
     }
 
+
     private void changeEmailIfNeeded(UserDto userDto, User userOldData) {
         if (userDto.getEmail() == null) {
             userDto.setEmail(userOldData.getEmail());
         }
+    }
+
+    public boolean checkIfEmailExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public String returnUserEmailByToken(String token) {

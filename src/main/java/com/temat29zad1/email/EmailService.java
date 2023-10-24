@@ -15,26 +15,24 @@ import javax.mail.internet.MimeMessage;
 public class EmailService {
 
     private final JavaMailSender javaMailSender;
-    private final PasswordResetService passwordResetService;
 
-    public EmailService(JavaMailSender javaMailSender, PasswordResetService passwordResetService) {
+    public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
-        this.passwordResetService = passwordResetService;
     }
 
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
-    public void sendEmail(UserDto userDto) {
+    public void sendEmail(String email, String token) {
         try {
             logger.info("Wysyłam wiadomość");
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setFrom("bootcamp@spoko.pl");
-            helper.setTo(userDto.getEmail());
+            helper.setTo(email);
             helper.setReplyTo("bootcamp@spoko.pl");
             helper.setSubject("Zmiana hasła");
             helper.setText("Aby ustawić nowe hasło naciśnij na link: " + "<a href="
-                           + passwordResetService.generatePasswordResetToken(userDto) + ">link do nowego hasła</a> ,"
+                           + token + ">link do nowego hasła</a> ,"
                            + " link traci ważność po 30 minutach.", true);
             javaMailSender.send(helper.getMimeMessage());
         } catch (MessagingException e) {

@@ -22,4 +22,7 @@ interface UserRepository extends JpaRepository<User, Long> {
                         @Param(value = "role") Role role, @Param(value = "id") Long id);
 
     Optional<User> findUserByPasswordResetToken_Token(String token);
+
+    boolean existsByEmail(String email);
+
 }
