@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping
-    public String user (Model model) {
+    public String user() {
         return "user";
     }
 
@@ -34,14 +34,8 @@ public class UserController {
 
     @PostMapping("/update")
     public String updateUser(@CurrentSecurityContext SecurityContext securityContext, UserDto userDto) {
-        Boolean saved = userService.updateUser(userDto, null, null);
-        if (saved) {
-            if (securityContext.getAuthentication().getAuthorities().toString().equals("[ROLE_ADMIN]")) {
-                return "redirect:/admin";
-            }
-            return "redirect:/user";
-        }
-        return "error";
+        userService.updateUsersFullName(userDto);
+        return "redirect:/user";
     }
 }
 

@@ -1,7 +1,5 @@
 package com.temat29zad1.email;
 
-import com.temat29zad1.user.PasswordResetService;
-import com.temat29zad1.user.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,7 +20,7 @@ public class EmailService {
 
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
-    public void sendEmail(String email, String token) {
+    public void sendPasswordResetEmail(String email, String linkWithToken) {
         try {
             logger.info("Wysyłam wiadomość");
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -32,7 +30,7 @@ public class EmailService {
             helper.setReplyTo("bootcamp@spoko.pl");
             helper.setSubject("Zmiana hasła");
             helper.setText("Aby ustawić nowe hasło naciśnij na link: " + "<a href="
-                           + token + ">link do nowego hasła</a> ,"
+                           + linkWithToken + ">link do nowego hasła</a> ,"
                            + " link traci ważność po 30 minutach.", true);
             javaMailSender.send(helper.getMimeMessage());
         } catch (MessagingException e) {

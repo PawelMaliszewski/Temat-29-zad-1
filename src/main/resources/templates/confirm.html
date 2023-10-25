@@ -13,9 +13,9 @@
 </head>
 <body>
 <div class="container confirm">
-    <h1 th:text="${message}" class="login-header">Operacja zakończona sukcesem</h1>
-    <i class="fa-solid fa-floppy-disk fa-10x lock-icon"></i>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+    <i class="fa-solid fa-info fa-5x lock-icon pt-5"></i>
+    <h1 th:text="${message}" class="login-header pt-4">Operacja zakończona sukcesem</h1>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center pt-3">
         <a th:href="@{/}">Strona główna</a>
         <a th:href="@{/login}">Zaloguj</a>
     </div>

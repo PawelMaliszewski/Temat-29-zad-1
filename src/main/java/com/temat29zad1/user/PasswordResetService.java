@@ -17,38 +17,20 @@ public class PasswordResetService {
         this.userRepository = userRepository;
     }
 
-    public String returnTokenIfValidated(String token) {
+    public Boolean checkIfTokenIsValid(String token) {
         Optional<PasswordResetToken> passToken = passwordResetTokenRepository.findPasswordResetTokenByToken(token);
-        if (passToken.isEmpty() || passToken.get().getExpiryDateTime().isBefore(LocalDateTime.now())) {
-            return "";
-        }
-        return passToken.get().getToken();
-    }
-
-    public void deleteExpiredTokenIfExists(Long id) {
-        Optional<PasswordResetToken> byUserId = passwordResetTokenRepository.findByUser_Id(id);
-        if (byUserId.isPresent()) {
-            if (returnTokenIfValidated(byUserId.get().getToken()).isEmpty()) {
-                passwordResetTokenRepository.deleteTokenByToken(byUserId.get().getToken());
-            }
-        }
+        return passToken.isPresent() && !passToken.get().getExpiryDateTime().isBefore(LocalDateTime.now());
     }
 
     public String generatePasswordResetToken(String email) {
         User user = userRepository.findUserByEmail(email).get();
         UUID uuid = UUID.randomUUID();
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        LocalDateTime expiryDateTime = currentDateTime.plusMinutes(30L);
         PasswordResetToken resetToken = new PasswordResetToken();
         resetToken.setUser(user);
         resetToken.setToken(uuid.toString());
-        resetToken.setExpiryDateTime(expiryDateTime);
+        resetToken.setExpiryDateTime(LocalDateTime.now().plusMinutes(30L));
         resetToken.setUser(user);
         PasswordResetToken token = passwordResetTokenRepository.save(resetToken);
-        if (token != null) {
-            String endPointUrl = "http://localhost:8080/set-new-password";
-            return endPointUrl + "/" + resetToken.getToken();
-        }
-        return "błąd !";
+        return token.getToken();
     }
 }

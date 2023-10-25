@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-                xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+                >
 <head>
     <meta charset="UTF-8">
     <title>Edytuj</title>
@@ -21,41 +21,12 @@
         <input th:field="*{firstName}" th:type="text" class="form-control" id="firstName" placeholder="wpisz imię">
         <label for="lastName" class="form-label">Edytuj nazwisko</label>
         <input th:field="*{lastName}" type="text" class="form-control" id="lastName" placeholder="wpisz nazwisko">
-        <label sec:authorize="hasRole('ADMIN')" for="email" class="form-label">Edytuj email</label>
-        <input sec:authorize="hasRole('ADMIN')" th:field="*{email}" type="text" class="form-control" id="email"
-               placeholder="Wpisz email">
-        <label for="pass" class="form-label">Wpisz hasło, jeżeli chcesz je zmienić</label>
-        <input th:field="*{password}" type="password" class="form-control" id="pass" placeholder="wpisz hasło">
-        <div>
-            <label class="form-check-label" for="flexCheckIndeterminate">Pokaż hasło</label>
-            <input class="form-check-input" type="checkbox" onclick="myFunction()" value="" id="flexCheckIndeterminate">
-        </div>
-        <input sec:authorize="hasRole('USER')"  th:field="*{role}" hidden>
-        <label sec:authorize="hasRole('ADMIN')"  for="role">Wybierz role użytkownika</label>
-        <select sec:authorize="hasRole('ADMIN')"  th:field="*{role}" id="role" class="form-select mb-2 w-25"
-                aria-label="Small select example" required>
-            <option value="">Wybierz kategorie</option>
-            <option name="Rola użytkownika"
-                    th:each="userRole: ${T(com.temat29zad1.user.Role).values()}"
-                    th:value="${userRole}"
-                    th:text="${userRole.name()}"></option>
-        </select>
-
         <button type="submit" class="btn btn-primary form-item">Zapisz</button>
     </form>
     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
         <a th:href="@{/}">Strona główna</a>
+        <a th:href="@{/set-new-password/change}">Zmień hasło</a>
     </div>
 </div>
-<script>
-    function myFunction() {
-        let x = document.getElementById("pass");
-        if (x.type === "password") {
-            x.type = "text";
-        } else {
-            x.type = "password";
-        }
-    }
-</script>
 </body>
 </html>

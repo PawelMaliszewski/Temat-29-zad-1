@@ -2,7 +2,10 @@
     margin: 0 auto;
     max-width: 400px;
 }
-
+.table{
+    margin: 0 auto;
+    max-width: 800px;
+}
 .confirm{
     margin: 0 auto;
     max-width: 800px;

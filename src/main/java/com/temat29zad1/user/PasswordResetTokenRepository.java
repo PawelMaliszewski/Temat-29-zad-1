@@ -14,6 +14,4 @@ import java.util.Optional;
     @Modifying
     @Query("DELETE PasswordResetToken t WHERE t.token = :token")
     void deleteTokenByToken(String token);
-
-    Optional<PasswordResetToken> findByUser_Id(Long id);
 }

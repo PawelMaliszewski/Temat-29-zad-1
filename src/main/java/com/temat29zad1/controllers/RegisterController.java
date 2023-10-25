@@ -1,6 +1,5 @@
 package com.temat29zad1.controllers;
 
-import com.temat29zad1.user.Role;
 import com.temat29zad1.user.UserService;
 import com.temat29zad1.user.UserDto;
 import org.springframework.stereotype.Controller;
@@ -25,8 +24,7 @@ public class RegisterController {
 
     @PostMapping("/register")
     public String registerUser(UserDto userDto, Model model) {
-        userDto.setRole(Role.USER);
-        Boolean register = userService.register(userDto);
+        Boolean register = userService.registerUser(userDto);
         if (register) {
             return "redirect:/confirm?message=Konto utworzone.";
         }

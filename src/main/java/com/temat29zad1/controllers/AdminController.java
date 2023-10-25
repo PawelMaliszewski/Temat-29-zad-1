@@ -4,8 +4,7 @@ import com.temat29zad1.user.UserService;
 import com.temat29zad1.user.UserDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,9 +25,17 @@ public class AdminController {
         return "admin";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/edit")
     public String editById(Long id, Model model) {
         model.addAttribute("userDto", userService.findUserDtoById(id));
         return "edit";
+    }
+
+    @PostMapping("/edit")
+    public String reverseRole(Long id, Model model) {
+        userService.reverseRole(id);
+        List<UserDto> usersByRole = userService.findAllUsers();
+        model.addAttribute("dtoUserList", usersByRole);
+        return "admin";
     }
 }

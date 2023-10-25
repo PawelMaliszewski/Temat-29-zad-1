@@ -1,8 +1,10 @@
 package com.temat29zad1.user;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,11 +14,15 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final PasswordResetService passwordResetService;
+
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PasswordResetTokenRepository passwordResetTokenRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PasswordResetService passwordResetService, PasswordResetTokenRepository passwordResetTokenRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.passwordResetService = passwordResetService;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
 
@@ -28,8 +34,9 @@ public class UserService {
         return userRepository.findAll().stream().map(UserMapper::convertToUserDto).toList();
     }
 
-    public Boolean register(UserDto userDto) {
+    public Boolean registerUser(UserDto userDto) {
         User user = UserMapper.convertToUser(userDto);
+        user.setRole(Role.USER);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         try {
             userRepository.save(user);
@@ -40,52 +47,18 @@ public class UserService {
         }
     }
 
-    public Boolean updateUser(UserDto userDto, String token, String password) {
-        User user = null;
-        if (token != null) {
-            Optional<User> userByToken = userRepository.findUserByPasswordResetToken_Token(token);
-            if (userByToken.isPresent()) {
-                user = userByToken.get();
-                user.setPassword(passwordEncoder(password));
-            }
-        } else if (password != null || !userDto.getPassword().isEmpty()) {
-            User userOldData = userRepository.findById(userDto.getId()).get();
-            String userDtoPassword = userDto.getPassword();
-            changeEmailIfNeeded(userDto, userOldData);
-            user = UserMapper.convertToUser(userDto);
-            user.setPassword(passwordEncoder(userDtoPassword));
-        } else {
-            User userOldData = userRepository.findById(userDto.getId()).get();
-            changeEmailIfNeeded(userDto, userOldData);
-            user = UserMapper.convertToUser(userDto);
-            user.setPassword(userOldData.getPassword());
-        }
-        try {
-            userRepository.updateUserById(user.getFirstName(), user.getLastName(), user.getEmail(),
-                    user.getPassword(), user.getRole(), user.getId());
-            if ((token != null)) {
-                passwordResetTokenRepository.deleteTokenByToken(token);
-            }
-            return true;
-        } catch (DataIntegrityViolationException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
-
-
-    private void changeEmailIfNeeded(UserDto userDto, User userOldData) {
-        if (userDto.getEmail() == null) {
-            userDto.setEmail(userOldData.getEmail());
+    @Transactional
+    public void updateUsersFullName(UserDto userDto) {
+        Optional<User> optionalUser = userRepository.findById(userDto.getId());
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
         }
     }
 
     public boolean checkIfEmailExists(String email) {
         return userRepository.existsByEmail(email);
-    }
-
-    public String returnUserEmailByToken(String token) {
-        return userRepository.findUserByPasswordResetToken_Token(token).get().getEmail();
     }
 
     public UserDto findUserDtoById(Long id) {
@@ -96,8 +69,46 @@ public class UserService {
         passwordResetTokenRepository.deleteTokenByToken(token);
     }
 
-    private String passwordEncoder(String password) {
-        return passwordEncoder.encode(password);
+    @Transactional
+    public void reverseRole(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getRole().equals(Role.USER)) {
+                user.setRole(Role.ADMIN);
+            } else {
+                user.setRole(Role.USER);
+            }
+        }
     }
 
+    @Transactional
+    public boolean updateUserPasswordByToken(String userToken, String password) {
+        Boolean validated = passwordResetService.checkIfTokenIsValid(userToken);
+        if (validated) {
+            Optional<User> optionalUser = userRepository.findUserByPasswordResetToken_Token(userToken);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                user.setPassword(passwordEncoder.encode(password));
+                passwordResetTokenRepository.deleteTokenByToken(userToken);
+                return true;
+            }
+        }
+        deleteTokenByToken(userToken);
+        return false;
+    }
+
+
+    @Transactional
+    public boolean updatePassword(SecurityContext securityContext, String password, String oldPassword) {
+        Optional<User> optionalUser = userRepository.findUserByEmail(securityContext.getAuthentication().getName());
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(password));
+                return true;
+            }
+        }
+        return false;
+    }
 }
