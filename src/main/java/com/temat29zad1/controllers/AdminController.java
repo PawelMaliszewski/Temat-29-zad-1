@@ -25,13 +25,7 @@ public class AdminController {
         return "admin";
     }
 
-    @GetMapping("/edit")
-    public String editById(Long id, Model model) {
-        model.addAttribute("userDto", userService.findUserDtoById(id));
-        return "edit";
-    }
-
-    @PostMapping("/edit")
+    @PostMapping("/revers-role")
     public String reverseRole(Long id, Model model) {
         userService.reverseRole(id);
         List<UserDto> usersByRole = userService.findAllUsers();

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl" xmlns:th="https://www.thymeleaf.org"
-                xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<html lang="pl" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Panel administratora</title>
@@ -30,7 +29,7 @@
             <td class="text-center align-middle" th:text="*{email}">a</td>
             <td class="text-center align-middle" th:text="*{role.name()}">a</td>
             <td class="text-center align-middle">
-                <form th:action="@{/admin/edit}" method="post" th:object="${Long}">
+                <form th:action="@{/admin/revers-role}" method="post" th:object="${Long}">
                     <input th:name="id" hidden th:value="${user.id}">
                 <button type="submit" th:if="${user.role.name().equals('USER')}" class="btn btn-danger">Zmień Role na ADMIN</button>
                 <button type="submit" th:if="${user.role.name().equals('ADMIN')}" class="btn btn-success">Zmień Role na USER</button>

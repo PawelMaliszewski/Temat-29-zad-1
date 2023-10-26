@@ -48,21 +48,17 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUsersFullName(UserDto userDto) {
-        Optional<User> optionalUser = userRepository.findById(userDto.getId());
+    public void updateUsersFullName(UserFullNameDto userDto, String currentUserEmail) {
+        Optional<User> optionalUser = userRepository.findUserByEmail(currentUserEmail);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
+            user.setFirstName(userDto.getFirstName());
+            user.setLastName(userDto.getLastName());
         }
     }
 
     public boolean checkIfEmailExists(String email) {
         return userRepository.existsByEmail(email);
-    }
-
-    public UserDto findUserDtoById(Long id) {
-        return userRepository.findById(id).map(UserMapper::convertToUserDto).get();
     }
 
     public void deleteTokenByToken(String token) {
@@ -97,7 +93,6 @@ public class UserService {
         deleteTokenByToken(userToken);
         return false;
     }
-
 
     @Transactional
     public boolean updatePassword(SecurityContext securityContext, String password, String oldPassword) {

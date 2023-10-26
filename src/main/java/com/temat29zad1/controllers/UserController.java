@@ -1,7 +1,9 @@
 package com.temat29zad1.controllers;
 
+import com.temat29zad1.user.UserFullNameDto;
 import com.temat29zad1.user.UserService;
 import com.temat29zad1.user.UserDto;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Controller;
@@ -33,8 +35,9 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public String updateUser(@CurrentSecurityContext SecurityContext securityContext, UserDto userDto) {
-        userService.updateUsersFullName(userDto);
+    public String updateUser(Authentication authentication, UserFullNameDto userDto) {
+        String currentUserEmail = authentication.getName();
+        userService.updateUsersFullName(userDto, currentUserEmail);
         return "redirect:/user";
     }
 }
